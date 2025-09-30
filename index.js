@@ -1,36 +1,46 @@
 const express = require('express');
+const path = require('path');
+
 const app = express();
 
+// Path
+const VIEWS_DIR = path.join(__dirname, 'views');
+
 // ==== Data ====
-const latestBooks = [
-  { id: 1, title: 'Clean Code', author: 'Robert C. Martin' },
-  { id: 2, title: 'The Pragmatic Programmer', author: 'Andrew Hunt' },
-  { id: 3, title: 'Refactoring', author: 'Martin Fowler' },
-  { id: 4, title: 'You Don’t Know JS Yet', author: 'Kyle Simpson' },
-  { id: 5, title: 'Designing Data-Intensive Apps', author: 'Martin Kleppmann' },
+const cars = [
+  { id: 1, title: 'Honda BR-V', year: '2017' },
+  { id: 2, title: 'Toyota Veloz', year: '2024' },
+  { id: 3, title: 'Chevrolet Corvette C8 ZR1', year: '2025' },
+  { id: 4, title: 'Toyota GR Yaris', year: '2025' },
+  { id: 5, title: 'BYD Sealion 7', year: '2025' },
 ];
 
-const favoriteBooks = [
-  { id: 101, title: 'Atomic Habits', author: 'James Clear' },
-  { id: 102, title: 'Deep Work', author: 'Cal Newport' },
-  { id: 103, title: 'Hooked', author: 'Nir Eyal' },
-  { id: 104, title: 'Sprint', author: 'Jake Knapp' },
-  { id: 105, title: 'Inspired', author: 'Marty Cagan' },
-];
-
-// ==== Route 'home' ====
+// ==== Route Index ====
 app.get('/', (req, res) => {
-  res.send('Selamat datang di ExpressJS');
+  res.sendFile(path.join(VIEWS_DIR, 'index.html'));
 });
 
 // ==== Route 'about' ====
 app.get('/about', (req, res) => {
-  res.send('Ini halaman tentang saya');
+  res.sendFile(path.join(VIEWS_DIR, 'about.html'));
 });
 
 // ==== JSON Route ====
+app.get('/cars', (req, res) => {
+  res.json({
+    // == Isi JSON disini ==
+    carsList: cars
+  });
+});
+
+// ==== 404 Fallback ====
+app.use((req, res) => {
+  res.status(404).send('Error 404: Halaman tidak ditemukan');
+});
 
 // ==== Port Settings ====
-app.listen(8000, () => {
-  console.log('Server is running at port 8000');
+const port = process.env.port || 3000;
+
+app.listen(port, () => {
+  console.log(`Server is running at port ${port}`);
 });
